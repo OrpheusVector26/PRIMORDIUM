@@ -12,6 +12,10 @@ Architecture direction is strong, while concrete adapters, hardening, observabil
 
 See [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) for the current architecture, risk assessment, and roadmap.
 
+## Companion delivery report
+
+The [DEEPSEEK_SANDBOX delivery report](DEEPSEEK_SANDBOX_DELIVERY_REPORT.md) documents a proposed standard-library-only Termux sandbox and its explicit `PrimordiumAdapter` integration boundary. The report is preserved as received; its code was not executed or represented as a completed integration.
+
 ## Safety principles
 
 - Deny dangerous capabilities by default.
