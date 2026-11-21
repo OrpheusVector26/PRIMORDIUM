@@ -20,6 +20,8 @@ The [DEEPSEEK_SANDBOX delivery report](DEEPSEEK_SANDBOX_DELIVERY_REPORT.md) docu
 
 The initial working boundary is implemented in `primordium_adapter/`. It provides typed, versioned models; policy-aware request contexts; bounded pagination with signed opaque cursors; structured correlated events; stable errors; explicit integrity status; and a safe in-memory reference adapter. The reference adapter does not access the filesystem, execute modules, invoke a shell, or make network requests.
 
+It also includes a dependency-light A2A v1.0 card validator and negotiation helper in `primordium_adapter/a2a.py`. This validates cards and builds JSON-RPC envelopes without making network calls or claiming signature verification.
+
 See [docs/ADAPTER_BOUNDARY.md](docs/ADAPTER_BOUNDARY.md) for the integration contract and security rules. Run the contract tests with:
 
 ```bash
