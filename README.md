@@ -16,6 +16,16 @@ See [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) for the current architecture, risk 
 
 The [DEEPSEEK_SANDBOX delivery report](DEEPSEEK_SANDBOX_DELIVERY_REPORT.md) documents a proposed standard-library-only Termux sandbox and its explicit `PrimordiumAdapter` integration boundary. The report is preserved as received; its code was not executed or represented as a completed integration.
 
+## Adapter boundary
+
+The initial working boundary is implemented in `primordium_adapter/`. It provides typed, versioned models; policy-aware request contexts; bounded pagination with signed opaque cursors; structured correlated events; stable errors; explicit integrity status; and a safe in-memory reference adapter. The reference adapter does not access the filesystem, execute modules, invoke a shell, or make network requests.
+
+See [docs/ADAPTER_BOUNDARY.md](docs/ADAPTER_BOUNDARY.md) for the integration contract and security rules. Run the contract tests with:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
 ## Safety principles
 
 - Deny dangerous capabilities by default.
@@ -32,7 +42,8 @@ mcp/            thin stdio server and tool registry
 core/           PolicyEngine and Orchestrator
 evidence/       SHA3-512 EvidenceLedger
 browser/        controlled asynchronous CDP client
-osint/          provider interfaces
+primordium_adapter/ typed integration boundary and reference adapter
+osint/           provider interfaces
 intelligence/   verification and reasoning components
 security/       sandbox and capability-token components
 tests/          policy, ledger, and adapter tests
