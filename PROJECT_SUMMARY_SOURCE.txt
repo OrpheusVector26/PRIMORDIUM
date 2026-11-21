@@ -1,0 +1,89 @@
+**A. Executive Summary**
+
+**FACT**: All prior PX-77 concepts (MCP registration, CDP client with async queue, Truth Protocol direction, Playwright/BrowserOS hybrid strategy, DeepSeek-style routing, Cherry automation concepts) have been consolidated into a new modular repository named **PRIMORDIUM** under `/home/workdir/artifacts/PRIMORDIUM/`.
+
+**Key change**: Architecture shifted from a monolithic MCP script to a **policy-first, evidence-first agent platform scaffold**. High-risk capabilities (arbitrary shell, unrestricted JS evaluation, live individual OSINT targeting) are denied by default.
+
+**Production Readiness Score (realistic)**: **61/100** (matches the deep audit). Architecture direction is strong; hardening, full adapters, and test coverage remain the gap.
+
+**B. Critical Findings**
+
+- Monolith eliminated. New layout:
+  - `mcp/` – thin stdio server + tool registry
+  - `core/` – PolicyEngine + Orchestrator
+  - `evidence/` – SHA3-512 EvidenceLedger with chain hashing
+  - `browser/` – CDPClient (blocked dangerous methods by default)
+  - `osint/`, `intelligence/`, `security/` – stubs ready for expansion
+- Policy Engine evaluates every tool call before execution.
+- Evidence Ledger records every allowed call with cryptographic linkage.
+- Safety boundaries explicitly enforced in code and documentation.
+
+**C. Risk Assessment**
+
+| Risk | Status |
+|------|--------|
+| Unsandboxed shell / JS | **Denied by default** in PolicyEngine |
+| Live individual OSINT | Not implemented; provider interfaces only |
+| CDP arbitrary evaluate | Explicitly blocked in CDPClient |
+| Filesystem mutation | Capability-gated (FS_WRITE not enabled by default) |
+
+**D. Security Assessment**
+
+- Capability matrix + global deny list.
+- Every decision generates an `audit_id`.
+- Ledger creates immutable chain (`previous_hash` + SHA3-512).
+- Still missing: real sandbox (gVisor/Podman), OAuth/RBAC tokens, full human-in-the-loop UI.
+
+**E. Performance Assessment**
+
+- Thin MCP + async CDP queue design is efficient.
+- No heavy model loading at import time.
+- Ready for horizontal scaling once adapters are added.
+
+**F. Architecture Recommendations**
+
+Follow the structure already created. Do **not** re-monolith. Next modules to flesh out:
+
+1. `security/sandbox.py` + capability tokens  
+2. `intelligence/verifier.py` (claim extraction + confidence)  
+3. `browser/playwright_adapter.py` (accessibility-tree first)  
+4. Full pytest suite + CI  
+
+**G. Technical Debt Analysis**
+
+- High residual debt: concrete tool adapters, full test coverage, observability, dependency locking.
+- Low debt on governance skeleton (Policy + Ledger are the highest-value pieces).
+
+**H. Prioritized Action Plan**
+
+1. **P0** – Expand PolicyEngine with more fine-grained rules + human-approval hook.  
+2. **P1** – Complete Evidence Ledger (export, verification tool).  
+3. **P2** – Playwright accessibility adapter + controlled CDP.  
+4. **P3** – Test harness + Docker packaging.  
+
+**I. Implementation Roadmap**
+
+- **Week 1**: Policy + Ledger maturity + basic tests (already started).  
+- **Weeks 2-3**: Browser adapters + verification layer.  
+- **Week 4+**: Sandbox, CI/CD, documentation hardening.
+
+**J. Production Readiness Score: 61/100**
+
+**FACT**: Repository is live at:
+
+`/home/workdir/artifacts/PRIMORDIUM/`
+
+Key files created:
+
+- `README.md` – vision, principles, safety boundaries  
+- `core/policy_engine.py` – full capability/risk model  
+- `evidence/ledger.py` – SHA3-512 chain ledger  
+- `browser/cdp_client.py` – async queue + blocked dangerous methods  
+- `mcp/server.py` – thin policy-gated MCP server  
+- `tests/test_policy.py` – basic denial tests  
+- `pyproject.toml` + `requirements.txt` + Apache-2.0 LICENSE
+
+**Next concrete step**:  
+Run `cd /home/workdir/artifacts/PRIMORDIUM && python -m pytest tests/ -v` (after installing deps) or request expansion of any specific module (Policy, Ledger, Playwright adapter, etc.).
+
+PRIMORDIUM is now the single governed repository for the entire effort.
